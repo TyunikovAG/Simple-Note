@@ -1,4 +1,12 @@
 package ru.tyunikovag.model;
 
-public class Note {
+import java.awt.*;
+
+public interface Note {
+
+    String getText();
+    void setText(String text);
+
+    Font getFont();
+    void setFont(Font font);
 }
