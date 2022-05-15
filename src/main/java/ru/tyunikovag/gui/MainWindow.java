@@ -64,7 +64,9 @@ public class MainWindow extends JFrame {
     }
 
     private void addClicked(ActionEvent e) {
-        addNoteToPanel(new SimpleNote(""), true);
+        SimpleNote note = new SimpleNote("");
+        notes.add(note);
+        addNoteToPanel(note, true);
         Component[] items = notesPanel.getComponents();
         repaintFrame();
     }
@@ -87,27 +89,55 @@ public class MainWindow extends JFrame {
         oneNotePanel.setMinimumSize(new Dimension(200, 100));
         oneNotePanel.setLayout(new BorderLayout());
 
+        JButton btnEdit = new JButton("Edit");
+        btnEdit.addActionListener(e -> editButtonAction(e));
+
         JTextArea noteTextArea = new JTextArea(note.getText());
         noteTextArea.setLineWrap(true);
         noteTextArea.setColumns(24);
-        if(note.getFont() != null){
+        noteTextArea.setBackground(Color.LIGHT_GRAY);
+        if (note.getFont() != null) {
             noteTextArea.setFont(note.getFont());
         } else {
             noteTextArea.setFont(new Font("Arial", Font.PLAIN, 16));
         }
         noteTextArea.setEditable(editable);
-        if(!editable){
-            noteTextArea.setBackground(Color.LIGHT_GRAY);
+        if (editable) {
+            noteTextArea.setBackground(Color.WHITE);
+            btnEdit.setText("Save");
         }
-
-        JButton btnEdit = new JButton("Edit");
-        // TODO: 15.05.2022 implement edit listener, it must unblock note and set btn caption to "save"
-//        btnEdit.addActionListener();
 
         oneNotePanel.add(noteTextArea, BorderLayout.CENTER);
         oneNotePanel.add(btnEdit, BorderLayout.EAST);
 
         notesPanel.add(oneNotePanel);
+    }
+
+    private void editButtonAction(ActionEvent e) {
+        JButton btn = (JButton) e.getSource();
+        JPanel oneNotePanel = (JPanel) btn.getParent();
+        JPanel notesPanel = (JPanel) oneNotePanel.getParent();
+        Component[] components = notesPanel.getComponents();
+        int index = 0;
+        for (int i = 0; i < components.length; i++) {
+            if (components[i] == oneNotePanel) {
+                index = i;
+                break;
+            }
+        }
+        Note currentNote = notes.get(index);
+        JTextArea textArea = (JTextArea) btn.getParent().getComponents()[0];
+        if (btn.getText().equals("Save")) {
+            currentNote.setText(textArea.getText());
+            btn.setText("Edit");
+            textArea.setEditable(false);
+            textArea.setBackground(Color.LIGHT_GRAY);
+            saveNotes();
+        } else {
+            btn.setText("Save");
+            textArea.setEditable(true);
+            textArea.setBackground(Color.WHITE);
+        }
     }
 
     private void repaintFrame() {
