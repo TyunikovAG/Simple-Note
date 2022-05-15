@@ -38,7 +38,7 @@ public class SimpleNotesStoreProvider implements StoreProvider{
     }
 
     private void createDefaultNotesList() {
-        this.notes = Collections.emptyList();
+        this.notes = new LinkedList<>();
         this.notes.add(new SimpleNote("Default simple note"));
     }
 }
