@@ -41,7 +41,7 @@ public class MainWindow extends JFrame {
 
         btnAdd = new Button("Add note");
         btnAdd.setPreferredSize(new Dimension(100, 50));
-        btnAdd.addActionListener(e -> addClicked(e));
+        btnAdd.addActionListener(this::addClicked);
         btnSave = new Button("Save notes");
         btnSave.setPreferredSize(new Dimension(100, 50));
         btnSave.addActionListener(e -> saveNotes());
@@ -62,7 +62,6 @@ public class MainWindow extends JFrame {
         SimpleNote note = new SimpleNote("");
         notes.add(note);
         addNoteToPanel(note, true);
-        Component[] items = notesPanel.getComponents();
         repaintFrame();
     }
 
@@ -82,10 +81,13 @@ public class MainWindow extends JFrame {
 
         JPanel oneNotePanel = new JPanel();
         oneNotePanel.setMinimumSize(new Dimension(200, 100));
-        oneNotePanel.setLayout(new BorderLayout());
+        oneNotePanel.setLayout(new FlowLayout());
 
         JButton btnEdit = new JButton("Edit");
-        btnEdit.addActionListener(e -> editButtonAction(e));
+        btnEdit.addActionListener(this::editButtonAction);
+
+        JButton btnDelete = new JButton("Delete");
+        btnDelete.addActionListener(this::deleteButtonAction);
 
         JTextArea noteTextArea = new JTextArea(note.getText());
         noteTextArea.setLineWrap(true);
@@ -102,25 +104,25 @@ public class MainWindow extends JFrame {
             btnEdit.setText("Save");
         }
 
-        oneNotePanel.add(noteTextArea, BorderLayout.CENTER);
-        oneNotePanel.add(btnEdit, BorderLayout.EAST);
+        oneNotePanel.add(noteTextArea);
+        oneNotePanel.add(btnEdit);
+        oneNotePanel.add(btnDelete);
 
         notesPanel.add(oneNotePanel);
     }
 
+    private void deleteButtonAction(ActionEvent e) {
+        int index = getNoteIndex(e);
+        notes.remove(index);
+        saveNotes();
+        notesPanel.remove(index);
+        repaintFrame();
+    }
+
     private void editButtonAction(ActionEvent e) {
         JButton btn = (JButton) e.getSource();
-        JPanel oneNotePanel = (JPanel) btn.getParent();
-        JPanel notesPanel = (JPanel) oneNotePanel.getParent();
-        Component[] components = notesPanel.getComponents();
-        int index = 0;
-        for (int i = 0; i < components.length; i++) {
-            if (components[i] == oneNotePanel) {
-                index = i;
-                break;
-            }
-        }
-        Note currentNote = notes.get(index);
+
+        Note currentNote = notes.get(getNoteIndex(e));
         JTextArea textArea = (JTextArea) btn.getParent().getComponents()[0];
         if (btn.getText().equals("Save")) {
             currentNote.setText(textArea.getText());
@@ -133,6 +135,19 @@ public class MainWindow extends JFrame {
             textArea.setEditable(true);
             textArea.setBackground(Color.WHITE);
         }
+    }
+
+    private int getNoteIndex(ActionEvent e){
+        JButton btn = (JButton) e.getSource();
+        JPanel oneNotePanel = (JPanel) btn.getParent();
+        JPanel notesPanel = (JPanel) oneNotePanel.getParent();
+        Component[] components = notesPanel.getComponents();
+        for (int i = 0; i < components.length; i++) {
+            if (components[i] == oneNotePanel) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private void repaintFrame() {
