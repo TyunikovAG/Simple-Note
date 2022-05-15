@@ -1,6 +1,7 @@
 package ru.tyunikovag.gui;
 
 import ru.tyunikovag.model.Note;
+import ru.tyunikovag.model.SimpleNote;
 import ru.tyunikovag.providers.SimpleNotesStoreProvider;
 import ru.tyunikovag.providers.StoreProvider;
 
@@ -63,7 +64,9 @@ public class MainWindow extends JFrame {
     }
 
     private void addClicked(ActionEvent e) {
-
+        addNoteToPanel(new SimpleNote(""), true);
+        Component[] items = notesPanel.getComponents();
+        repaintFrame();
     }
 
     private void saveNotes() {
@@ -73,12 +76,12 @@ public class MainWindow extends JFrame {
     private void loadNotes() {
         notes = storeProvider.loadNotes();
         for (Note note : notes) {
-            addNoteToPanel(note);
+            addNoteToPanel(note, false);
         }
-        mainPanel.repaint();
+        repaintFrame();
     }
 
-    private void addNoteToPanel(Note note) {
+    private void addNoteToPanel(Note note, boolean editable) {
 
         JPanel oneNotePanel = new JPanel();
         oneNotePanel.setMinimumSize(new Dimension(200, 100));
@@ -92,9 +95,13 @@ public class MainWindow extends JFrame {
         } else {
             noteTextArea.setFont(new Font("Arial", Font.PLAIN, 16));
         }
+        noteTextArea.setEditable(editable);
+        if(!editable){
+            noteTextArea.setBackground(Color.LIGHT_GRAY);
+        }
 
         JButton btnEdit = new JButton("Edit");
-        // TODO: 15.05.2022 implement edit listener
+        // TODO: 15.05.2022 implement edit listener, it must unblock note and set btn caption to "save"
 //        btnEdit.addActionListener();
 
         oneNotePanel.add(noteTextArea, BorderLayout.CENTER);
@@ -103,5 +110,10 @@ public class MainWindow extends JFrame {
         notesPanel.add(oneNotePanel);
     }
 
+    private void repaintFrame() {
+        mainPanel.invalidate();
+        mainPanel.validate();
+        mainPanel.repaint();
+    }
 
 }
