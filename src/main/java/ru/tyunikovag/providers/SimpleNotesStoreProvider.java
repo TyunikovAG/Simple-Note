@@ -29,6 +29,9 @@ public class SimpleNotesStoreProvider implements StoreProvider{
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("data"));
             this.notes = (List<Note>) objectInputStream.readObject();
+            if (notes.isEmpty()){
+                createDefaultNotesList();
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             createDefaultNotesList();

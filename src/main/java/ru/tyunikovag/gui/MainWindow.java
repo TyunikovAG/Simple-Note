@@ -112,11 +112,16 @@ public class MainWindow extends JFrame {
     }
 
     private void deleteButtonAction(ActionEvent e) {
-        int index = getNoteIndex(e);
-        notes.remove(index);
-        saveNotes();
-        notesPanel.remove(index);
-        repaintFrame();
+        int input = JOptionPane.showConfirmDialog(null,
+                "Are you sure to delete?", "Select an Option...",JOptionPane.YES_NO_OPTION);
+
+        if (input == 0) {
+            int index = getNoteIndex(e);
+            notes.remove(index);
+            saveNotes();
+            notesPanel.remove(index);
+            repaintFrame();
+        }
     }
 
     private void editButtonAction(ActionEvent e) {
