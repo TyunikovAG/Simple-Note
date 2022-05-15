@@ -19,7 +19,6 @@ public class MainWindow extends JFrame {
     private JPanel buttonPanel;
     private Button btnAdd;
     private Button btnSave;
-    private Button btnLoad;
 
     private static List<Note> notes = new LinkedList<>();
     private static final StoreProvider storeProvider = new SimpleNotesStoreProvider();
@@ -46,15 +45,11 @@ public class MainWindow extends JFrame {
         btnSave = new Button("Save notes");
         btnSave.setPreferredSize(new Dimension(100, 50));
         btnSave.addActionListener(e -> saveNotes());
-        btnLoad = new Button("Load notes");
-        btnLoad.setPreferredSize(new Dimension(100, 50));
-        btnLoad.addActionListener(e -> loadNotes());
         buttonPanel = new JPanel();
         LayoutManager btnPanelLayout = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
         buttonPanel.setLayout(btnPanelLayout);
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnSave);
-        buttonPanel.add(btnLoad);
 
         mainPanel.add(notesPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.EAST);
