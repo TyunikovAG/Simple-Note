@@ -1,7 +1,13 @@
 package ru.tyunikovag.gui;
 
+import ru.tyunikovag.model.Note;
+import ru.tyunikovag.providers.SimpleNotesStoreProvider;
+import ru.tyunikovag.providers.StoreProvider;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.*;
 
 public class MainWindow extends JFrame{
@@ -14,9 +20,12 @@ public class MainWindow extends JFrame{
     private Button saveButton;
     private Button loadButton;
 
+    private static List<Note> notes = new LinkedList<>();
+    private static final StoreProvider storeProvider = new SimpleNotesStoreProvider();
 
     public MainWindow(){
         initGui();
+        loadNotes();
     }
 
     private void initGui() {
@@ -34,10 +43,10 @@ public class MainWindow extends JFrame{
         addButton.addActionListener(e -> addClicked(e));
         saveButton = new Button("Save notes");
         saveButton.setPreferredSize(new Dimension(100, 50));
-        saveButton.addActionListener(e -> saveClicked(e));
+        saveButton.addActionListener(e -> saveNotes());
         loadButton = new Button("Load notes");
         loadButton.setPreferredSize(new Dimension(100, 50));
-        loadButton.addActionListener(e -> loadClicked(e));
+        loadButton.addActionListener(e -> loadNotes());
         buttonPanel = new JPanel();
         LayoutManager btnPanelLayout = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
         buttonPanel.setLayout(btnPanelLayout);
@@ -56,12 +65,12 @@ public class MainWindow extends JFrame{
 
     }
 
-    private void saveClicked(ActionEvent e) {
-
+    private void saveNotes() {
+        storeProvider.saveNotes(notes);
     }
 
-    private void loadClicked(ActionEvent e) {
-
+    private void loadNotes() {
+        notes = storeProvider.loadNotes();
     }
 
 

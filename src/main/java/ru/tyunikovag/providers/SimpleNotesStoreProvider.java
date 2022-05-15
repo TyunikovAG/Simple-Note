@@ -2,6 +2,7 @@ package ru.tyunikovag.providers;
 
 import ru.tyunikovag.model.Note;
 
+import java.io.File;
 import java.util.List;
 
 public class SimpleNotesStoreProvider implements StoreProvider{
